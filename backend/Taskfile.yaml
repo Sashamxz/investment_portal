@@ -1,0 +1,45 @@
+version: "3"
+
+
+tasks:
+  install:
+    desc: Configure python virtual environment.
+    vars:
+      PYTHON_VERSION: 3.11.3
+    cmds:
+      - pyenv install {{.PYTHON_VERSION}} --skip-existing
+      - pyenv local {{.PYTHON_VERSION}}
+      - poetry env use {{.PYTHON_VERSION}}
+      - poetry install
+      - poetry run pre-commit install
+      - poetry run pre-commit install --hook-type commit-msg
+
+  lint:
+    desc: Lint and format all files.
+    dir: "{{.USER_WORKING_DIR}}"
+    cmds:
+      - task: black
+      - task: ruff
+
+  ruff:
+    desc: Lint and format all files.
+    dir: "{{.USER_WORKING_DIR}}"
+    cmds:
+      - ruff check .
+
+  ruff_fix:
+    desc: Lint and format all files.
+    dir: "{{.USER_WORKING_DIR}}"
+    cmds:
+      - ruff check . --fix --exit-non-zero-on-fix
+
+  black:
+    desc: Format all files.
+    dir: "{{.USER_WORKING_DIR}}"
+    cmds:
+      - black .
+
+  pre-commit:
+    desc: Run all linting and formatting checks that configured in pre-commit.
+    cmds:
+      - pre-commit run --all-files

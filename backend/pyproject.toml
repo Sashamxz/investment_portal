@@ -1,0 +1,165 @@
+[tool.poetry]
+name = "investments portal"
+version = "0.1.0"
+description = ""
+authors = ["Sashamxz <zontick99@gmail.com>"]
+readme = "README.md"
+
+
+[tool.poetry.dependencies]
+python = "3.11.3"
+sentry-sdk = "^1.16.0"
+fastapi = "^0.109.0"
+uvicorn = "^0.27.0.post1"
+sqlalchemy = "^2.0.25"
+pydantic-settings = "^2.1.0"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^22.6.0"
+pre-commit = "^2.19.0"
+commitizen = "^2.28.0"
+ruff = "^0.0.262"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.1.2"
+pytest-mock = "^3.10.0"
+pytest-env = "^0.8.1"
+pytest-cov = "^3.0.0"
+
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+addopts = [
+    "--import-mode=importlib",
+]
+python_files = [
+    "test_*.py",
+]
+pythonpath = [
+  "."
+]
+
+
+[tool.ruff]
+target-version = "py310"
+src = ["src"]
+select = [
+    "E", # pycodestyle
+    "W", # pycodestyle
+    "F", # Pyflakes
+    "I", # isort
+    # "N",  pep8-naming
+    # "D", # pydocstyle
+    "UP", # pyupgrade
+    "YTT", # flake8-2020
+    "ANN", # flake8-annotations
+    "S", # flake8-bandit
+    # "BLE", # flake8-blind-except
+    # "FBT", # flake8-boolean-trap
+    "B", # flake8-bugbear
+    "A", # flake8-builtins
+    "COM", # flake8-commas
+    "C4", # flake8-comprehensions
+    "DTZ", # flake8-datetimez
+    "T10", # flake8-debugger
+    # "EM", # flake8-errmsg
+    "ISC", # flake8-implicit-str-concat
+    # "T20", # flake8-print
+    "PT", # flake8-pytest-style
+    "ICN", # flake8-import-conventions
+    "INP", # flake8-no-pep420
+    "PIE", # flake8-pie
+    "RSE", # flake8-raise
+    # "RET", # flake8-return
+    "SLF", # flake8-self
+    "SIM", # flake8-simplify
+    # "TID", # flake8-tidy-imports
+    "TCH", # flake8-type-checking -- not sure if it works
+    # "ARG", # flake8-unused-arguments
+    # "PTH", # flake8-use-pathlib
+    # "ERA", # eradicate
+    "PGH", # pygrep-hooks
+    "PL", # Pylint
+    # "RUF", # Ruff-specific rules
+]
+ignore = [
+    "E501", # Line too long
+    "S101", # Use of `assert` detected
+    "S108", # Probable insecure usage of temporary file or directory: "/tmp/"
+    "S113", # Probable use of requests call without timeout
+    "PLR0913", # Too many arguments to function call
+    "ANN101", # Missing type annotation for `self` in method
+    "ANN102", # Missing type annotation for `cls` in classmethod
+    "PGH003", # Use specific rule codes when ignoring type issues
+]
+exclude = ["src/_deprecated"]
+
+[tool.ruff.isort]
+known-local-folder = ["src"]
+
+[tool.commitizen]
+name = "cz_customize"
+version = "0.11.0"
+version_files = [
+    ".VERSION",
+    "pyproject.toml:version"
+]
+style = [
+    ["qmark", "fg:#ff9d00 bold"],
+    ["question", "bold"],
+    ["answer", "fg:#ff9d00 bold"],
+    ["pointer", "fg:#ff9d00 bold"],
+    ["highlighted", "fg:#ff9d00 bold"],
+    ["selected", "fg:#cc5454"],
+    ["separator", "fg:#cc5454"],
+    ["instruction", ""],
+    ["text", ""],
+    ["disabled", "fg:#858585 italic"]
+]
+
+[tool.commitizen.customize]
+message_template = "{{change_type}}:{% if show_message %} {{message}}{% endif %}"
+example = "feature: this feature enable customize through config file"
+schema = '''
+<type>(<scope>): <subject>
+<BLANK LINE>
+<body>
+<BLANK LINE>
+(BREAKING CHANGE: )<footer>'''
+schema_pattern = "(build|ci|docs|feat|fix|perf|refactor|style|test|chore|revert|bump|infra)(\\(\\S+\\))?!?:(\\s.*)"
+info_path = "cz_customize_info.txt"
+info = """
+This is customized info
+"""
+commit_parser = "^(?P<change_type>feat|fix|refactor|perf|build|test|ci|chore|docs|style|infra|BREAKING CHANGE)(?:\\((?P<scope>[^()\\r\\n]*)\\)|\\()?(?P<breaking>!)?:\\s(?P<message>.*)?"
+
+# Changelog
+changelog_incremental = true
+change_type_order = ["BREAKING CHANGE", "Feat", "Fix", "Refactor", "Perf", "Build", "CI", "Tests", "Docs", "Chore", "Style", "Infrastructure"]
+change_type_map = { "feat" = "Feat", "fix" = "Fix", "refactor" = "Refactor", "perf" = "Perf", "build" = "Build", "test" = "Tests", "ci" = "CI", "chore" = "Chore", "docs" = "Docs", "style" = "Style", "infra" = "Infrastructure" }
+changelog_pattern = "^(feat|fix|refactor|perf|build|test|ci|docs|chore|style|infra|BREAKING CHANGE)?(!)?"
+
+# Bump
+bump_pattern = "^(BREAKING[\\-\\ ]CHANGE|feat|fix|refactor|perf|build|test|ci|docs|chore|style|infra)(\\(.+\\))?(!)?"
+bump_map = {"^.+!$" = "MAJOR", "^BREAKING[\\-\\ ]CHANGE" = "MAJOR", "feat" = "MINOR", "fix" = "PATCH", "refactor" = "PATCH", "perf" = "PATCH", "build" = "PATCH", "test" = "PATCH", "ci" = "PATCH", "style" = "PATCH", "docs" = "PATCH", "chore" = "PATCH", "infra" = "PATCH"}
+
+[[tool.commitizen.customize.questions]]
+type = "list"
+name = "change_type"
+# choices = [{value = "feature", name = "feature: A new feature."}, {value = "fix", name = "fix: A bug fix."}]
+choices = ["feature", "fix", "refactor", "perf", "build", "ci", "test", "docs", "style", "chore"]  # short version
+message = "Select the type of change you are committing"
+
+[[tool.commitizen.customize.questions]]
+type = "input"
+name = "message"
+message = "Body."
+
+[[tool.commitizen.customize.questions]]
+type = "confirm"
+name = "show_message"
+message = "Do you want to add body message in commit?"
